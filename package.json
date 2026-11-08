@@ -1,0 +1,34 @@
+{
+  "name": "prj-ed-4-editor-texto",
+  "version": "1.0.0",
+  "description": "Editor de texto web com desfazer/refazer, substituição de palavras (uma ou todas as ocorrências) e exportação para PDF. Projeto acadêmico da FATEC.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gm-paiva/prj-ed-4-editor-texto.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/gm-paiva/prj-ed-4-editor-texto/issues"
+  },
+  "homepage": "https://github.com/gm-paiva/prj-ed-4-editor-texto#readme",
+  "devDependencies": {
+    "@types/node": "^26.6.6",
+    "@types/typescript": "^0.4.29",
+    "typescript": "^7.0.2"
+  },
+  "dependencies": {
+    "dotenv": "^18.0.9",
+    "express": "^5.3.0",
+    "tsx": "^4.23.15"
+  },
+  "allowScripts": {
+    "esbuild@0.28.2": true
+  }
+}

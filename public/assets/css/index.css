@@ -1,3 +1,4 @@
+  /* ... (mesmo CSS do arquivo anterior) ... */
   * {
     margin: 0;
     padding: 0;
@@ -30,7 +31,6 @@
     flex-direction: column;
   }
 
-  /* HEADER */
   header {
     background: var(--bg-secondary);
     border-bottom: 1px solid var(--border);
@@ -75,7 +75,6 @@
     border: 1px solid var(--border);
   }
 
-  /* TOOLBAR */
   .toolbar {
     background: var(--bg-secondary);
     border-bottom: 1px solid var(--border);
@@ -113,13 +112,18 @@
     white-space: nowrap;
   }
 
-  .tool-btn:hover {
+  .tool-btn:hover:not(:disabled) {
     background: var(--bg-hover);
     color: var(--text-primary);
     border-color: var(--border);
   }
 
-  .tool-btn:active {
+  .tool-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .tool-btn:active:not(:disabled) {
     transform: scale(0.95);
   }
 
@@ -134,18 +138,11 @@
     color: white;
   }
 
-  .tool-btn.primary:hover {
+  .tool-btn.primary:hover:not(:disabled) {
     background: var(--accent-hover);
     border-color: var(--accent-hover);
   }
 
-  .tool-btn.danger:hover {
-    background: rgba(247, 118, 142, 0.15);
-    color: var(--danger);
-    border-color: var(--danger);
-  }
-
-  /* MAIN */
   main {
     flex: 1;
     display: flex;
@@ -155,7 +152,6 @@
     overflow: hidden;
   }
 
-  /* SEARCH PANEL */
   .search-panel {
     background: var(--bg-secondary);
     border: 1px solid var(--border);
@@ -256,7 +252,6 @@
     font-weight: 600;
   }
 
-  /* EDITOR */
   .editor-container {
     flex: 1;
     background: var(--bg-secondary);
@@ -334,7 +329,6 @@
     color: var(--bg-primary);
   }
 
-  /* STATUS BAR */
   .status-bar {
     background: var(--bg-secondary);
     border-top: 1px solid var(--border);
@@ -373,88 +367,26 @@
     50% { opacity: 0.5; }
   }
 
-  /* TOOLTIP */
-  .tool-btn[title] {
-    position: relative;
-  }
-
-  /* RESPONSIVE */
   @media (max-width: 768px) {
-    header {
-      padding: 0.75rem 1rem;
-    }
-
-    .file-name {
-      display: none;
-    }
-
-    .toolbar {
-      padding: 0.5rem;
-      overflow-x: auto;
-      flex-wrap: nowrap;
-    }
-
-    .tool-group {
-      border-right: none;
-      padding: 0 0.25rem;
-    }
-
-    .tool-btn span {
-      display: none;
-    }
-
-    .tool-btn {
-      padding: 0.5rem;
-    }
-
-    main {
-      padding: 0.75rem;
-    }
-
-    .search-panel {
-      grid-template-columns: 1fr;
-      padding: 1rem;
-    }
-
-    .editor-area {
-      padding: 1rem;
-    }
-
-    .status-bar {
-      padding: 0.5rem 1rem;
-      font-size: 0.75rem;
-    }
-
-    .status-group {
-      gap: 0.75rem;
-    }
+    header { padding: 0.75rem 1rem; }
+    .file-name { display: none; }
+    .toolbar { padding: 0.5rem; overflow-x: auto; flex-wrap: nowrap; }
+    .tool-group { border-right: none; padding: 0 0.25rem; }
+    .tool-btn span { display: none; }
+    .tool-btn { padding: 0.5rem; }
+    main { padding: 0.75rem; }
+    .search-panel { grid-template-columns: 1fr; padding: 1rem; }
+    .editor-area { padding: 1rem; }
+    .status-bar { padding: 0.5rem 1rem; font-size: 0.75rem; }
+    .status-group { gap: 0.75rem; }
   }
 
   @media (max-width: 480px) {
-    .logo span {
-      display: none;
-    }
-
-    .editor-content {
-      font-size: 0.95rem;
-    }
+    .logo span { display: none; }
+    .editor-content { font-size: 0.95rem; }
   }
 
-  /* SCROLLBAR */
-  ::-webkit-scrollbar {
-    width: 10px;
-    height: 10px;
-  }
-
-  ::-webkit-scrollbar-track {
-    background: var(--bg-primary);
-  }
-
-  ::-webkit-scrollbar-thumb {
-    background: var(--bg-hover);
-    border-radius: 5px;
-  }
-
-  ::-webkit-scrollbar-thumb:hover {
-    background: var(--text-muted);
-  }
+  ::-webkit-scrollbar { width: 10px; height: 10px; }
+  ::-webkit-scrollbar-track { background: var(--bg-primary); }
+  ::-webkit-scrollbar-thumb { background: var(--bg-hover); border-radius: 5px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
