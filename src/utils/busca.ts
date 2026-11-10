@@ -1,12 +1,16 @@
-// Retorna a lista de posições onde a palavra aparece (busca trivial)
-export function boyerMoore(
+function normalizar(s: string, diferenciarCaixa: boolean): string {
+  return diferenciarCaixa ? s : s.toLowerCase();
+}
+
+// Busca trivial: tenta casar o padrão em cada posição do texto
+export function buscarTrivial(
   texto: string,
   palavra: string,
   diferenciarCaixa = false
 ): number[] {
   if (!palavra) return [];
-  const t = diferenciarCaixa ? texto : texto.toLowerCase();
-  const p = diferenciarCaixa ? palavra : palavra.toLowerCase();
+  const t = normalizar(texto, diferenciarCaixa);
+  const p = normalizar(palavra, diferenciarCaixa);
   const posicoes: number[] = [];
 
   for (let i = 0; i <= t.length - p.length; i++) {
@@ -17,18 +21,62 @@ export function boyerMoore(
   return posicoes;
 }
 
-// Substitui só a primeira ocorrência a partir do cursor (ou a primeira do texto)
+// Boyer-Moore (heurística do caractere ruim): compara da direita para a
+// esquerda e, na falha, salta usando a última posição do caractere no padrão.
+export function buscarBoyerMoore(
+  texto: string,
+  palavra: string,
+  diferenciarCaixa = false
+): number[] {
+  if (!palavra) return [];
+  const t = normalizar(texto, diferenciarCaixa);
+  const p = normalizar(palavra, diferenciarCaixa);
+  const n = t.length;
+  const m = p.length;
+
+  const ultima = new Map<string, number>();
+  for (let i = 0; i < m; i++) ultima.set(p[i], i);
+
+  const posicoes: number[] = [];
+  let s = 0;
+  while (s <= n - m) {
+    let j = m - 1;
+    while (j >= 0 && p[j] === t[s + j]) j--;
+    if (j < 0) {
+      posicoes.push(s);
+      s += 1;
+    } else {
+      const k = ultima.get(t[s + j]) ?? -1;
+      s += Math.max(1, j - k);
+    }
+  }
+  return posicoes;
+}
+
+export interface ResultadoSubstituicao {
+  texto: string;
+  cursor: number; // posição logo após o trecho substituído
+  substituido: boolean;
+}
+
+// Substitui só a próxima ocorrência a partir do cursor (ou a primeira do texto)
 export function substituirUma(
   texto: string,
   palavra: string,
   nova: string,
   aPartirDe = 0,
   diferenciarCaixa = false
-): string {
-  const posicoes = boyerMoore(texto, palavra, diferenciarCaixa);
+): ResultadoSubstituicao {
+  const posicoes = buscarBoyerMoore(texto, palavra, diferenciarCaixa);
   const alvo = posicoes.find((p) => p >= aPartirDe) ?? posicoes[0];
-  if (alvo === undefined) return texto;
-  return texto.slice(0, alvo) + nova + texto.slice(alvo + palavra.length);
+  if (alvo === undefined) {
+    return { texto, cursor: aPartirDe, substituido: false };
+  }
+  return {
+    texto: texto.slice(0, alvo) + nova + texto.slice(alvo + palavra.length),
+    cursor: alvo + nova.length,
+    substituido: true,
+  };
 }
 
 // Substitui todas, usando a lista inteira de posições
@@ -38,7 +86,7 @@ export function substituirTodas(
   nova: string,
   diferenciarCaixa = false
 ): string {
-  const posicoes = boyerMoore(texto, palavra, diferenciarCaixa);
+  const posicoes = buscarBoyerMoore(texto, palavra, diferenciarCaixa);
   let resultado = "";
   let ultimo = 0;
   for (const p of posicoes) {
