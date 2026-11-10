@@ -1,33 +1,36 @@
 import { useState } from "react";
+import { Pilha } from "../utils/pilha";
+
+const LIMITE_HISTORICO = 100;
 
 export function useHistorico(inicial = "") {
   const [texto, setTexto] = useState(inicial);
-  const [desfazer, setDesfazer] = useState<string[]>([]); // pilha 1
-  const [refazer, setRefazer] = useState<string[]>([]);   // pilha 2
+  const [desfazer, setDesfazer] = useState(() => Pilha.vazia<string>(LIMITE_HISTORICO));
+  const [refazer, setRefazer] = useState(() => Pilha.vazia<string>(LIMITE_HISTORICO));
 
-  // Toda ação nova: empilha o estado atual em "desfazer" e esvazia "refazer"
+  // Ação nova: empilha o estado atual em "desfazer" e esvazia "refazer"
   function alterar(novoTexto: string) {
     if (novoTexto === texto) return;
-    setDesfazer([...desfazer, texto]);
-    setRefazer([]);
+    setDesfazer(desfazer.empilhar(texto));
+    setRefazer(refazer.limpar());
     setTexto(novoTexto);
   }
 
   // Desfazer: tira o topo de "desfazer" e manda o texto atual para "refazer"
   function desfazerAcao() {
-    if (desfazer.length === 0) return;
-    const topo = desfazer[desfazer.length - 1];
-    setDesfazer(desfazer.slice(0, -1));
-    setRefazer([...refazer, texto]);
-    setTexto(topo);
+    const { pilha, item } = desfazer.desempilhar();
+    if (item === undefined) return;
+    setDesfazer(pilha);
+    setRefazer(refazer.empilhar(texto));
+    setTexto(item);
   }
 
   function refazerAcao() {
-    if (refazer.length === 0) return;
-    const topo = refazer[refazer.length - 1];
-    setRefazer(refazer.slice(0, -1));
-    setDesfazer([...desfazer, texto]);
-    setTexto(topo);
+    const { pilha, item } = refazer.desempilhar();
+    if (item === undefined) return;
+    setRefazer(pilha);
+    setDesfazer(desfazer.empilhar(texto));
+    setTexto(item);
   }
 
   return {
@@ -35,7 +38,7 @@ export function useHistorico(inicial = "") {
     alterar,
     desfazerAcao,
     refazerAcao,
-    podeDesfazer: desfazer.length > 0,
-    podeRefazer: refazer.length > 0,
+    podeDesfazer: !desfazer.estaVazia(),
+    podeRefazer: !refazer.estaVazia(),
   };
 }
