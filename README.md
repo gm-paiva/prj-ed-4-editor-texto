@@ -5,8 +5,11 @@ Editor de texto web desenvolvido em React (Vite) e TypeScript. Projeto acadêmic
 ## Funcionalidades
 
 - Desfazer e refazer ações, com duas pilhas (FILO) e atalhos Ctrl+Z / Ctrl+Y
-- Substituir uma ou todas as ocorrências de uma palavra
-- Busca com Boyer-Moore (heurística do caractere ruim) e com busca trivial
+- Busca com Boyer-Moore (heurística do caractere ruim)
+- Todas as ocorrências ficam destacadas; a selecionada aparece em laranja
+- Botões Anterior e Próxima (ou Enter / Shift+Enter no campo de busca) para
+  escolher qual ocorrência será substituída
+- Substituir a ocorrência selecionada ou todas de uma vez
 - Opção de diferenciar maiúsculas e minúsculas
 - Exportar o texto como PDF
 
@@ -19,7 +22,7 @@ Editor de texto web desenvolvido em React (Vite) e TypeScript. Projeto acadêmic
 
     src/utils/pilha.ts        Pilha genérica (FILO)
     src/hooks/useHistorico.ts Desfazer/refazer com duas pilhas
-    src/utils/busca.ts        Busca trivial, Boyer-Moore e substituição
+    src/utils/busca.ts        Boyer-Moore e substituição
     src/utils/exportarPdf.ts  Exportação para PDF (jsPDF)
 
 ## Tecnologias
