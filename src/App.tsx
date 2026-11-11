@@ -135,6 +135,7 @@ export default function App() {
       <header className="topo">
         <h1>Editor de Texto</h1>
         <div className="acoes">
+          <a className="botao" href="#/apresentacao">Apresentação</a>
           <button onClick={desfazerAcao} disabled={!podeDesfazer}>↶ Desfazer</button>
           <button onClick={refazerAcao} disabled={!podeRefazer}>↷ Refazer</button>
           <button
