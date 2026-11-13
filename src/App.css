@@ -29,6 +29,8 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
 }
 
 .topo h1 { font-size: 1.4rem; margin: 0; }
@@ -47,6 +49,21 @@ button { cursor: pointer; transition: 0.15s; }
 button:hover:not(:disabled) { border-color: var(--destaque); }
 button:disabled { opacity: 0.4; cursor: not-allowed; }
 button.primario { background: var(--destaque); color: #fff; border-color: var(--destaque); }
+
+/* Link com a mesma aparência dos botões (ex.: ir para a apresentação) */
+a.botao {
+  display: inline-flex;
+  align-items: center;
+  font: inherit;
+  border: 1px solid var(--borda);
+  border-radius: 8px;
+  padding: 8px 12px;
+  background: var(--superficie);
+  color: var(--texto);
+  text-decoration: none;
+  transition: 0.15s;
+}
+a.botao:hover { border-color: var(--destaque); }
 
 input { flex: 1; min-width: 160px; }
 

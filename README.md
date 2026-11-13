@@ -12,6 +12,8 @@ Editor de texto web desenvolvido em React (Vite) e TypeScript. Projeto acadêmic
 - Substituir a ocorrência selecionada ou todas de uma vez
 - Opção de diferenciar maiúsculas e minúsculas
 - Exportar o texto como PDF
+- Página de apresentação do projeto (botão "Apresentação" ou `#/apresentacao`),
+  com uma seção para cada conceito estudado: código real e imagens de exemplo
 
 ## Como rodar
 
@@ -20,10 +22,15 @@ Editor de texto web desenvolvido em React (Vite) e TypeScript. Projeto acadêmic
 
 ## Estrutura
 
-    src/utils/pilha.ts        Pilha genérica (FILO)
-    src/hooks/useHistorico.ts Desfazer/refazer com duas pilhas
-    src/utils/busca.ts        Boyer-Moore e substituição
-    src/utils/exportarPdf.ts  Exportação para PDF (jsPDF)
+    src/utils/pilha.ts          Pilha genérica (FILO)
+    src/hooks/useHistorico.ts   Desfazer/refazer com duas pilhas
+    src/utils/busca.ts          Boyer-Moore e substituição
+    src/utils/exportarPdf.ts    Exportação para PDF (jsPDF)
+    src/Rotas.tsx               Alterna entre o editor e a apresentação (hash)
+    src/pages/Apresentacao.tsx  Página de apresentação (seções por conceito)
+    src/pages/BlocoCodigo.tsx   Bloco de código com numeração de linhas
+    src/utils/codigo.ts         Recorta e colore trechos do código-fonte
+    src/assets/apresentacao/    Imagens de exemplo da apresentação
 
 ## Tecnologias
 
