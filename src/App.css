@@ -1,0 +1,143 @@
+:root {
+  --fundo: #0c0d0d;
+  --superficie: #1a1c1e;
+  --texto: #e0e0e0;
+  --borda: #3a3c40;
+  --destaque: #1a3c7d;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  background: var(--fundo);
+  color: var(--texto);
+  font-family: "Inter", system-ui, sans-serif;
+  overflow-y: scroll;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  height: 0;
+}
+
+.app {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-height: 100vh;
+}
+
+.topo {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.topo h1 { font-size: 1.4rem; margin: 0; }
+.acoes, .busca { display: flex; gap: 8px; flex-wrap: wrap; }
+
+input, textarea, button {
+  font: inherit;
+  border: 1px solid var(--borda);
+  border-radius: 8px;
+  padding: 8px 12px;
+  background: var(--superficie);
+  color: var(--texto);
+}
+
+button { cursor: pointer; transition: 0.15s; }
+button:hover:not(:disabled) { border-color: var(--destaque); }
+button:disabled { opacity: 0.4; cursor: not-allowed; }
+button.primario { background: var(--destaque); color: #fff; border-color: var(--destaque); }
+
+/* Link com a mesma aparência dos botões (ex.: ir para a apresentação) */
+a.botao {
+  display: inline-flex;
+  align-items: center;
+  font: inherit;
+  border: 1px solid var(--borda);
+  border-radius: 8px;
+  padding: 8px 12px;
+  background: var(--superficie);
+  color: var(--texto);
+  text-decoration: none;
+  transition: 0.15s;
+}
+a.botao:hover { border-color: var(--destaque); }
+
+input { flex: 1; min-width: 160px; }
+
+/* Camada de destaque: fica atrás do textarea e precisa ter exatamente a mesma
+   fonte, margem interna e quebra de linha para as marcações coincidirem */
+.editor {
+  position: relative;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background: var(--superficie);
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.editor textarea,
+.espelho {
+  padding: 20px;
+  border: 1px solid var(--borda);
+  border-radius: 8px;
+  font: inherit;
+  line-height: 1.6;
+  scrollbar-gutter: stable;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.editor textarea::-webkit-scrollbar,
+.espelho::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  height: 0;
+}
+
+.editor textarea {
+  position: relative;
+  z-index: 1;
+  flex: 1;
+  min-height: 60vh;
+  resize: vertical;
+  background: transparent;
+}
+
+.espelho {
+  position: absolute;
+  inset: 0;
+  border-color: transparent;
+  color: transparent;
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+/* Sem padding nas marcas: qualquer espaço extra deslocaria o texto */
+.marca {
+  background: rgba(250, 204, 21, 0.3);
+  color: transparent;
+  border-radius: 3px;
+}
+
+.marca.ativa {
+  background: #b45f1e;
+  box-shadow: 0 0 0 2px #fb923c;
+}
+
+.info { margin: 0; width: 100%; font-size: 0.85rem; opacity: 0.8; }
+.opcao { display: flex; align-items: center; gap: 6px; font-size: 0.9rem; }
+.opcao input { flex: none; min-width: 0; }
