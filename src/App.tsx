@@ -1,7 +1,7 @@
 import { useMemo, useRef, useState, type ReactNode } from "react";
 import { useHistorico } from "./hooks/useHistorico";
 import {
-  buscarBoyerMoore,
+  buscaBoyerMoore,
   substituirOcorrencia,
   substituirTodas,
 } from "./utils/busca";
@@ -37,15 +37,14 @@ export default function App() {
   } = useHistorico("");
   const [buscar, setBuscar] = useState("");
   const [trocar, setTrocar] = useState("");
-  const [caixa, setCaixa] = useState(false);
   // Índice da ocorrência selecionada dentro da lista de posições
   const [atual, setAtual] = useState(0);
   const areaRef = useRef<HTMLTextAreaElement>(null);
   const espelhoRef = useRef<HTMLDivElement>(null);
 
   const posicoes = useMemo(
-    () => buscarBoyerMoore(texto, buscar, caixa),
-    [texto, buscar, caixa]
+    () => buscaBoyerMoore(texto, buscar),
+    [texto, buscar]
   );
   const total = posicoes.length;
   // Se o texto mudou e a lista encolheu, volta para o começo em vez de quebrar
@@ -53,11 +52,6 @@ export default function App() {
 
   function aoMudarBusca(valor: string) {
     setBuscar(valor);
-    setAtual(0);
-  }
-
-  function aoMudarCaixa(valor: boolean) {
-    setCaixa(valor);
     setAtual(0);
   }
 
@@ -88,7 +82,7 @@ export default function App() {
     const novoTexto = substituirOcorrencia(texto, inicio, buscar.length, trocar);
     // A seleção avança para a primeira ocorrência depois do trecho trocado
     const fim = inicio + trocar.length;
-    const proxima = buscarBoyerMoore(novoTexto, buscar, caixa).findIndex(
+    const proxima = buscaBoyerMoore(novoTexto, buscar).findIndex(
       (p) => p >= fim
     );
     alterar(novoTexto);
@@ -97,7 +91,7 @@ export default function App() {
   }
 
   function aoSubstituirTodas() {
-    alterar(substituirTodas(texto, buscar, trocar, caixa));
+    alterar(substituirTodas(texto, buscar, trocar));
     setAtual(0);
   }
 
@@ -174,14 +168,6 @@ export default function App() {
         <button onClick={aoSubstituirTodas} disabled={total === 0}>
           Substituir todas
         </button>
-        <label className="opcao">
-          <input
-            type="checkbox"
-            checked={caixa}
-            onChange={(e) => aoMudarCaixa(e.target.checked)}
-          />
-          Diferenciar maiúsculas
-        </label>
         {buscar && (
           <p className="info" role="status">
             {total === 0
