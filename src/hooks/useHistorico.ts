@@ -7,20 +7,20 @@ const LIMITE_HISTORICO = 100;
 // ------------------------------------------------------------
 // Conceito central: DUAS PILHAS (FILO) trabalhando juntas
 //
-//   ┌─────────────────┐     Nova ação      ┌─────────────────┐
-//   │   DESFAZER      │ ◄─────────────────  │     REFazer     │
-//   │   (passado)     │                     │   (futuro)      │
+//   ┌─────────────────┐     Nova ação       ┌─────────────────┐
+//   │   DESFAZER      │ ◄─────────────────  │    REFAZER      │
+//   │   (passado)     │                     │    (futuro)     │
 //   │                 │                     │                 │
-//   │  [estado 3]     │                     │                 │
-//   │  [estado 2]     │                     │                 │
-//   │  [estado 1]     │                     │                 │
+//   │   [estado 3]    │                     │                 │
+//   │   [estado 2]    │                     │                 │
+//   │   [estado 1]    │                     │                 │
 //   └─────────────────┘                     └─────────────────┘
 //        │                                        ▲
-//        │ Desfazer (pop)                         │ Refazer (pop)
+//        │ Desfazer                               │ Refazer 
 //        ▼                                        │
-//   ┌─────────────┐                              │
-//   │  TEXTO ATUAL │                              │
-//   └─────────────┘                              │
+//   ┌─────────────┐                               │
+//   │ TEXTO ATUAL │                               │
+//   └─────────────┘                               │
 //        │                                        │
 //        │ Nova digitação após desfazer           │
 //        └──────────────► LIMPA refazer ◄─────────┘
@@ -42,14 +42,15 @@ export function useHistorico(inicial = "") {
   // - LIMPA 'refazer' (futuro antigo não existe mais)
   function alterar(novoTexto: string) {
     if (novoTexto === texto) return;
+
     setDesfazer(desfazer.empilhar(texto));
     setRefazer(refazer.limpar());
     setTexto(novoTexto);
   }
 
   // DESFAZER (Ctrl+Z): volta ao estado anterior
-  // - Pop 'desfazer' → item = estado anterior
-  // - Push estado ATUAL em 'refazer' (vira futuro disponível)
+  // - 'desfazer' → item = estado anterior
+  // - estado ATUAL em 'refazer' (vira futuro disponível)
   // - Atualiza texto com o estado recuperado
   function desfazerAcao() {
     const { pilha, item } = desfazer.desempilhar();
@@ -60,8 +61,8 @@ export function useHistorico(inicial = "") {
   }
 
   // REFAZER (Ctrl+Y): re-aplica ação desfeita
-  // - Pop 'refazer' → item = estado que foi desfeito
-  // - Push estado ATUAL em 'desfazer' (vira passado)
+  // - 'refazer' → item = estado que foi desfeito
+  // - estado ATUAL em 'desfazer' (vira passado)
   // - Atualiza texto com o estado recuperado
   function refazerAcao() {
     const { pilha, item } = refazer.desempilhar();

@@ -21,7 +21,7 @@ export class Pilha<T> {
     return new Pilha<T>([], limite);
   }
 
-  // EMPilhar (push): adiciona item no TOPO
+  // EMPilhar: adiciona item no TOPO
   // - Cria novo array com item no final [...itens, item]
   // - Se exceder limite, descarta o MAIS ANTIGO (base da pilha) via slice(-limite)
   // - Retorna NOVA Pilha (imutabilidade)
@@ -31,7 +31,7 @@ export class Pilha<T> {
     return new Pilha<T>(cortados, this.limite);
   }
 
-  // DESempilhar (pop): remove e devolve item do TOPO
+  // DESempilhar: remove e devolve item do TOPO
   // - Se vazia, retorna { pilha: this, item: undefined }
   // - Senão: nova pilha sem o último item (slice(0, -1)) + item removido
   // - Retorna objeto com a nova pilha e o item removido

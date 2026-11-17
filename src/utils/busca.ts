@@ -17,34 +17,37 @@
 
 export function buscaBoyerMoore(
   texto: string,
-  palavra: string
+  padrao: string
 ): number[] {
-  if (!palavra) return [];
+  //Se o padrão for falsy (ou seja, ["", undefined, null], 0, NaN, false) retorna um array vazio
+  if (!padrao) return [];
 
   // Busca case-insensitive: normaliza ambos para minúsculas
   const t = texto.toLowerCase();
-  const p = palavra.toLowerCase();
-  const n = t.length;
-  const m = p.length;
+  const p = padrao.toLowerCase();
+  //n
+  const tl = t.length;
+  //m
+  const pl = p.length;
 
   // TABELA DE ÚLTIMA OCORRÊNCIA (heurística do caractere ruim)
   // Map<caractere, índice mais à direita no padrão>
-  // Permite calcular o salto quando há mismatch
+  // Permite calcular o salto quando há mismatch/divergência
   const ultima = new Map<string, number>();
-  for (let i = 0; i < m; i++) ultima.set(p[i], i);
+  for (let i = 0; i < pl; i++) ultima.set(p[i], i);
 
   const posicoes: number[] = [];
   let s = 0; // deslocamento do padrão sobre o texto
 
-  while (s <= n - m) {
-    // COMPARAÇÃO REVERSA: da direita para a esquerda (j = m-1 → 0)
-    let j = m - 1;
+  while (s <= tl - pl) {
+    // COMPARAÇÃO REVERSA: da direita para a esquerda (j = pl-1 → 0)
+    let j = pl - 1;
     while (j >= 0 && p[j] === t[s + j]) j--;
 
     if (j < 0) {
       // MATCH COMPLETO: todos os caracteres bateram
       posicoes.push(s);
-      s += m; // avança após o padrão (sem sobreposição)
+      s += pl; // avança após o padrão (sem sobreposição)
     } else {
       // MISMATCH em posição j
       // t[s+j] é o "caractere ruim" do texto
@@ -64,7 +67,7 @@ export function buscaBoyerMoore(
 // SUBSTITUIR UMA OCORRÊNCIA
 // Corte cirúrgico: antes + nova + depois
 // posicao = índice inicial da ocorrência (vindo de buscaBoyerMoore)
-// tamanho = palavra.length (tamanho do trecho a substituir)
+// tamanho = padrao.length (tamanho do trecho a substituir)
 export function substituirOcorrencia(
   texto: string,
   posicao: number,
@@ -81,15 +84,15 @@ export function substituirOcorrencia(
 // - Evita replace encadeado que realocaria string a cada iteração
 export function substituirTodas(
   texto: string,
-  palavra: string,
+  padrao: string,
   nova: string
 ): string {
-  const posicoes = buscaBoyerMoore(texto, palavra);
+  const posicoes = buscaBoyerMoore(texto, padrao);
   let resultado = "";
   let ultimo = 0;
   for (const p of posicoes) {
     resultado += texto.slice(ultimo, p) + nova;
-    ultimo = p + palavra.length;
+    ultimo = p + padrao.length;
   }
   return resultado + texto.slice(ultimo);
 }

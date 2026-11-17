@@ -2,7 +2,7 @@
   "name": "prj-ed-4-editor-texto",
   "private": true,
   "version": "0.0.0",
-    "description": "Editor de texto web com desfazer/refazer, substituição de palavras (uma ou todas as ocorrências) e exportação para PDF. Projeto acadêmico da FATEC.",
+  "description": "Editor de texto web com desfazer/refazer, substituição de palavras (uma ou todas as ocorrências) e exportação para PDF. Projeto acadêmico da FATEC.",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/gm-paiva/prj-ed-4-editor-texto.git"
@@ -36,5 +36,8 @@
     "typescript": "~6.0.3",
     "typescript-eslint": "^8.72.1",
     "vite": "^8.3.6"
+  },
+  "allowScripts": {
+    "core-js@3.51.0": true
   }
 }
