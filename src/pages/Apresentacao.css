@@ -339,6 +339,199 @@
   border-radius: 0 0 12px 12px;
 }
 
+/* ---------- Simulador das duas pilhas ---------- */
+
+.simulador {
+  --sim-laranja: #ff8c42;
+  --sim-azul: #5b8def;
+  --sim-item: #24272b;
+  --sim-item-borda: #3a3c40;
+  --sim-topo: #1a3c7d;
+  --sim-altura: 38px;
+  --sim-gap: 6px;
+
+  margin: 0;
+  border: 1px solid var(--borda);
+  border-radius: 12px;
+  background: #1a1c1e;
+  overflow: hidden;
+}
+
+.sim-palco {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  padding: 20px 20px 16px;
+}
+
+.sim-coluna { min-width: 0; display: flex; flex-direction: column; }
+
+.sim-titulo {
+  margin: 0 0 10px;
+  text-align: center;
+  font-family: var(--mono);
+  font-size: 0.95rem;
+  font-weight: 600;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.sim-titulo small { font-weight: 400; font-size: 0.72rem; color: var(--suave); }
+.sim-col-desfazer .sim-titulo { color: var(--sim-laranja); }
+.sim-col-refazer .sim-titulo { color: var(--sim-azul); }
+
+.sim-pilha-wrap { position: relative; }
+
+.sim-pilha {
+  list-style: none;
+  margin: 0;
+  padding: 8px;
+  display: flex;
+  flex-direction: column-reverse; /* primeiro item = base da pilha */
+  gap: var(--sim-gap);
+  height: calc(6 * var(--sim-altura) + 5 * var(--sim-gap) + 16px + 3px);
+  border: 2.5px solid var(--sim-item-borda);
+  border-top: none;
+  border-radius: 0 0 10px 10px;
+}
+
+.sim-vazia {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  display: grid;
+  place-items: center;
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  color: #6b7078;
+  pointer-events: none;
+}
+
+.sim-item {
+  position: relative;
+  flex: none;
+  height: var(--sim-altura);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 8px;
+  border-radius: 6px;
+  background: var(--sim-item);
+  border: 1.5px solid var(--sim-item-borda);
+  font-family: var(--mono);
+  font-weight: 600;
+  font-size: 1rem;
+  transition: opacity 0.28s, transform 0.28s, background 0.3s, border-color 0.3s;
+}
+.sim-item.topo { background: var(--sim-topo); border-color: var(--sim-azul); }
+.sim-item.atual { background: #2b2f35; border-color: #9aa0a8; }
+.sim-item.saindo { opacity: 0; transform: translateY(-8px) scale(0.85); }
+
+.sim-txt { max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+.sim-etiqueta {
+  position: absolute;
+  top: -9px;
+  right: 6px;
+  padding: 0 6px;
+  border-radius: 4px;
+  background: var(--sim-azul);
+  color: #0c0d0d;
+  font-family: "Inter", system-ui, sans-serif;
+  font-size: 0.65rem;
+  font-weight: 700;
+  line-height: 1.5;
+}
+
+.sim-centro {
+  flex: 1;
+  display: flex;
+  align-items: center;
+}
+.sim-slot {
+  width: 100%;
+  padding: 8px;
+  border: 2.5px dashed var(--sim-item-borda);
+  border-radius: 10px;
+}
+
+.sim-controles {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 20px;
+  border-top: 1px solid var(--borda);
+}
+.sim-controles button { font-size: 0.85rem; padding: 7px 12px; }
+.sim-espaco { flex: 1; }
+
+.sim-campo { display: flex; align-items: center; gap: 8px; flex: 1 1 200px; min-width: 0; }
+.sim-campo span { font-size: 0.8rem; color: var(--suave); }
+.sim-campo input { flex: 1; min-width: 0; font-family: var(--mono); padding: 7px 12px; }
+
+.sim-btn-desfazer, .sim-btn-refazer { font-family: var(--mono); }
+.sim-btn-desfazer { color: var(--sim-laranja); }
+.sim-btn-refazer { color: var(--sim-azul); }
+.sim-btn-desfazer:hover:not(:disabled) { border-color: var(--sim-laranja); }
+.sim-btn-refazer:hover:not(:disabled) { border-color: var(--sim-azul); }
+
+.sim-explica {
+  padding: 14px 20px;
+  border-top: 1px solid var(--borda);
+  background: var(--passo-bg);
+  min-height: 7.5em;
+}
+.sim-chamada {
+  display: inline-block;
+  margin-bottom: 8px;
+  font-family: var(--mono);
+  font-weight: 600;
+  font-size: 1rem;
+}
+.sim-chamada.alterar, .sim-log li.alterar > code { color: var(--texto); }
+.sim-chamada.desfazer, .sim-log li.desfazer > code { color: var(--sim-laranja); }
+.sim-chamada.refazer, .sim-log li.refazer > code { color: var(--sim-azul); }
+.sim-chamada.inicio, .sim-log li.inicio > code { color: var(--suave); }
+
+.sim-explica ol { margin: 0; padding-left: 1.3em; line-height: 1.7; font-size: 0.9rem; }
+.sim-explica li::marker { color: var(--suave); }
+.simulador code { font-family: var(--mono); }
+.sim-explica li code { color: var(--c-funcao); font-size: 0.85rem; }
+
+.sim-log {
+  list-style: none;
+  margin: 0;
+  padding: 10px 20px;
+  border-top: 1px solid var(--borda);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 0.82rem;
+}
+.sim-log li {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 3px 0;
+}
+.sim-log li span { color: var(--suave); }
+.sim-log li span code { color: var(--texto); }
+.sim-log li:first-child { font-weight: 600; }
+
+.simulador figcaption {
+  padding: 10px 14px;
+  font-size: 0.8rem;
+  color: var(--suave);
+  border-top: 1px solid var(--borda);
+  background: var(--passo-bg);
+}
+.simulador figcaption code { color: var(--texto); font-size: 0.78rem; }
+
+@media (prefers-reduced-motion: reduce) {
+  .sim-item { transition: none; }
+}
+
 /* ---------- Blocos de código ---------- */
 
 .codigos {
@@ -437,5 +630,8 @@
   .passo { flex-direction: column; gap: 8px; }
   .passo-num { width: auto; height: auto; border-radius: 6px; padding: 4px 10px; }
   .imagem img { min-width: 100%; }
+  .sim-palco { gap: 8px; padding: 16px 10px 12px; }
+  .sim-item { font-size: 0.85rem; padding: 0 4px; }
+  .sim-controles, .sim-explica, .sim-log { padding-left: 12px; padding-right: 12px; }
   .indice { justify-content: center; }
 }
