@@ -92,69 +92,14 @@
   color: var(--suave);
 }
 
-.indice button {
-  background: var(--superficie);
-  border: 1px solid var(--borda);
-  border-radius: 8px;
-  padding: 6px 12px;
-  color: var(--texto);
-  font-size: 0.85rem;
-  cursor: pointer;
-  transition: 0.15s;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.indice button:hover {
-  border-color: var(--destaque);
-}
-
 .indice button span {
   color: var(--destaque-claro);
   font-variant-numeric: tabular-nums;
-  font-family: var(--mono);
+  margin-right: 4px;
 }
 
 .hero-img {
   width: 100%;
-}
-
-/* ---------- Toggle códigos ---------- */
-
-.toggle-codigos {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 10px 16px;
-  background: var(--superficie);
-  border: 1px solid var(--borda);
-  border-radius: 10px;
-  font-size: 0.9rem;
-}
-
-.toggle-codigos button {
-  background: var(--destaque);
-  color: #000;
-  border: none;
-  border-radius: 6px;
-  padding: 6px 14px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: 0.15s;
-}
-
-.toggle-codigos button:hover {
-  filter: brightness(1.1);
-}
-
-.toggle-codigos button.ativo {
-  background: var(--destaque-claro);
-}
-
-.dica {
-  color: var(--suave);
-  font-size: 0.85rem;
 }
 
 /* ---------- Seções de conceito ---------- */
@@ -377,13 +322,6 @@
   font-size: 0.85rem;
   line-height: 1.65;
   tab-size: 2;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-}
-.codigo pre::-webkit-scrollbar {
-  display: none;
-  width: 0;
-  height: 0;
 }
 
 .codigo code {
@@ -419,23 +357,29 @@
 .tk-tipo { color: var(--c-tipo); }
 .tk-comentario { color: var(--c-comentario); font-style: italic; }
 
-.codigo-foco {
-  margin: 10px 0 0;
-  padding: 8px 16px;
-  font-size: 0.8rem;
-  color: var(--destaque-claro);
-  font-family: var(--mono);
-  background: var(--passo-bg);
-  border: 1px solid var(--passo-border);
-  border-radius: 8px;
+/* ---------- Imagens de exemplo ---------- */
+
+.imagens {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }
 
-/* ---------- Responsivo ---------- */
+.imagem {
+  margin: 0;
+  overflow-x: auto;
+  border: 1px solid var(--borda);
+  border-radius: 12px;
+  background: var(--superficie);
+}
+
+.imagem img {
+  display: block;
+  width: 100%;
+  min-width: 640px; /* em telas estreitas a imagem rola em vez de ficar ilegível */
+  height: auto;
+}
 
 @media (max-width: 600px) {
   .apresentacao { padding: 16px 16px 72px; gap: 44px; }
-  .passo { flex-direction: column; gap: 8px; }
-  .passo-num { width: auto; height: auto; border-radius: 6px; padding: 4px 10px; }
-  .imagem img { min-width: 100%; }
-  .indice { justify-content: center; }
 }

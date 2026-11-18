@@ -1,21 +1,29 @@
-import { useEffect, useState } from "react";
-import { extrairBloco, type Trecho } from "../utils/codigo";
+import { useEffect } from "react";
+import { extrairArquivo, extrairBloco, type Trecho } from "../utils/codigo";
 import BlocoCodigo from "./BlocoCodigo";
 import "./Apresentacao.css";
 
-// Código-fonte lido dos arquivos do projeto (?raw)
+// O código exibido aqui é lido dos próprios arquivos do projeto (?raw)
+import appFonte from "../App.tsx?raw";
+import historicoFonte from "../hooks/useHistorico.ts?raw";
 import buscaFonte from "../utils/busca.ts?raw";
 import exportarPdfFonte from "../utils/exportarPdf.ts?raw";
 import pilhaFonte from "../utils/pilha.ts?raw";
-import historicoFonte from "../hooks/useHistorico.ts?raw";
 
-// Imagens conceituais (diagramas e ilustrações, não prints do editor)
-import imgPilha from "../assets/apresentacao/pilha.svg";
 import imgBoyerMoore from "../assets/apresentacao/boyer-moore.svg";
-import imgSubstituicao from "../assets/apresentacao/substituicao.svg";
-import imgHistorico from "../assets/apresentacao/historico.svg";
-import imgPdf from "../assets/apresentacao/pdf.svg";
+import imgBusca from "../assets/apresentacao/busca.png";
 import imgEnunciado from "../assets/apresentacao/enunciado.png";
+import imgHistorico from "../assets/apresentacao/historico.svg";
+import imgHistorico1 from "../assets/apresentacao/historico-1.png";
+import imgHistorico2 from "../assets/apresentacao/historico-2.png";
+import imgPdf from "../assets/apresentacao/pdf.svg";
+import imgPilha from "../assets/apresentacao/pilha.svg";
+import imgSubstituicao from "../assets/apresentacao/substituicao.svg";
+import imgSubstituirTodas from "../assets/apresentacao/substituir-todas.png";
+import imgSubstituirUma from "../assets/apresentacao/substituir-uma.png";
+
+// Mude para true para mostrar também os comentários que estão no código
+const MOSTRAR_COMENTARIOS = false;
 
 const REPOSITORIO = "https://github.com/gm-paiva/prj-ed-4-editor-texto";
 const TECNOLOGIAS = ["TypeScript", "React", "Vite", "jsPDF"];
@@ -35,7 +43,7 @@ interface ConceitoVisual {
   imagem: { src: string; alt: string; legenda: string } | null;
 }
 
-const conceitos: ConceitoVisual[] = [
+const conceitos: Conceito[] = [
   {
     id: "pilha",
     titulo: "Pilha (FILO)",
@@ -51,6 +59,8 @@ const conceitos: ConceitoVisual[] = [
         titulo: "Desempilhar",
         descricao: "Remove e devolve o elemento do topo. O elemento abaixo vira o novo topo.",
       },
+    ],
+    imagens: [
       {
         titulo: "Topo",
         descricao: "Consulta o elemento do topo sem removê-lo.",
@@ -69,26 +79,30 @@ const conceitos: ConceitoVisual[] = [
   },
   {
     id: "desfazer-refazer",
-    titulo: "Desfazer / Refazer com Duas Pilhas",
+    titulo: "Desfazer / Refazer",
     capitulo: "Cap. 4.3",
-    explicacao:
-      "O segredo do desfazer/refazer está em **duas pilhas sincronizadas**: a pilha **desfazer** guarda o histórico de estados anteriores; a pilha **refazer** guarda os estados que foram desfeitos. Ao digitar, o estado atual vai para 'desfazer' e 'refazer' é limpa. Ao desfazer, o topo de 'desfazer' volta a ser o texto atual e o estado anterior vai para 'refazer'. Ao refazer, o inverso acontece.",
-    passos: [
+    codigos: [
       {
-        titulo: "Digitar algo novo",
-        descricao: "Estado atual → empilha em 'desfazer'; 'refazer' esvazia.",
+        arquivo: "src/hooks/useHistorico.ts",
+        trecho: extrairArquivo(historicoFonte),
       },
       {
-        titulo: "Ctrl+Z (Desfazer)",
-        descricao: "Topo de 'desfazer' → texto atual; estado anterior → empilha em 'refazer'.",
+        arquivo: "src/App.tsx",
+        trecho: extrairBloco(appFonte, "function aoTeclar("),
+      },
+    ],
+    imagens: [
+      {
+        src: imgHistorico,
+        alt: "Tabela com o texto e o conteúdo das pilhas desfazer e refazer a cada ação",
       },
       {
-        titulo: "Ctrl+Y (Refazer)",
-        descricao: "Topo de 'refazer' → texto atual; estado anterior → empilha em 'desfazer'.",
+        src: imgHistorico1,
+        alt: "Editor com o botão Desfazer habilitado e o Refazer desabilitado",
       },
       {
-        titulo: "Nova digitação após desfazer",
-        descricao: "'Refazer' é limpa — o futuro alternativo deixa de existir.",
+        src: imgHistorico2,
+        alt: "Editor depois de desfazer, com Desfazer e Refazer habilitados",
       },
     ],
     codigo: {
@@ -104,26 +118,22 @@ const conceitos: ConceitoVisual[] = [
   },
   {
     id: "boyer-moore",
-    titulo: "Busca Boyer-Moore (Heurística do Caractere Ruim)",
+    titulo: "Busca em cadeias: Boyer-Moore",
     capitulo: "Cap. 3.2",
-    explicacao:
-      "O algoritmo **Boyer-Moore** procura uma palavra no texto comparando **da direita para a esquerda**. Quando encontra um caractere que não bate (o 'caractere ruim'), ele consulta uma tabela pré-calculada com a **última posição de cada caractere no padrão** e salta várias posições de uma vez. Isso evita comparações desnecessárias — no melhor caso, inspeciona apenas 1 em cada *m* caracteres (onde *m* é o tamanho da palavra).",
-    passos: [
+    codigos: [
       {
-        titulo: "Pré-processamento",
-        descricao: "Constrói tabela 'última ocorrência' para cada caractere do padrão.",
+        arquivo: "src/utils/busca.ts",
+        trecho: extrairBloco(buscaFonte, "export function buscarBoyerMoore"),
+      },
+    ],
+    imagens: [
+      {
+        src: imgBoyerMoore,
+        alt: "Passo a passo do Boyer-Moore procurando 'pato' em 'o sapo viu o pato'",
       },
       {
-        titulo: "Comparação reversa",
-        descricao: "Compara padrão com texto da direita para a esquerda.",
-      },
-      {
-        titulo: "Mismatch → salto inteligente",
-        descricao: "Caractere do texto não bate? Consulta tabela e pula para alinhar última ocorrência.",
-      },
-      {
-        titulo: "Match completo",
-        descricao: "Todos os caracteres bateram → registra posição e avança após o padrão.",
+        src: imgBusca,
+        alt: "Editor com as três ocorrências de 'gato' destacadas e a segunda selecionada",
       },
     ],
     codigo: {
@@ -139,26 +149,24 @@ const conceitos: ConceitoVisual[] = [
   },
   {
     id: "substituicao",
-    titulo: "Substituir Uma / Todas",
+    titulo: "Substituir uma / todas",
     capitulo: "Cap. 3.2",
-    explicacao:
-      "A substituição usa as posições encontradas pelo Boyer-Moore. **Substituir uma** troca apenas a ocorrência selecionada (a destacada em laranja) e avança a seleção para a próxima. **Substituir todas** percorre a lista de posições de trás para frente (ou constrói nova string acumulando trechos) para que os índices não se desloquem durante a troca.",
-    passos: [
+    codigos: [
       {
-        titulo: "Buscar posições",
-        descricao: "buscaBoyerMoore devolve array com índice inicial de cada ocorrência.",
+        arquivo: "src/utils/busca.ts",
+        trecho: extrairBloco(buscaFonte, "export function substituirOcorrencia"),
       },
       {
-        titulo: "Substituir uma",
-        descricao: "Corta string em 3 partes: antes + nova + depois da posição selecionada.",
+        arquivo: "src/utils/busca.ts",
+        trecho: extrairBloco(buscaFonte, "export function substituirTodas"),
       },
       {
-        titulo: "Substituir todas",
-        descricao: "Itera posições e concatena: trecho original + substituição, sem sobrepor.",
+        arquivo: "src/App.tsx",
+        trecho: extrairBloco(appFonte, "function aoSubstituirUma"),
       },
       {
-        titulo: "Atualizar seleção",
-        descricao: "Após substituir uma, busca novamente para achar a próxima ocorrência válida.",
+        arquivo: "src/App.tsx",
+        trecho: extrairBloco(appFonte, "function aoSubstituirTodas"),
       },
     ],
     codigo: {
@@ -180,21 +188,30 @@ const conceitos: ConceitoVisual[] = [
       "A biblioteca **jsPDF** gera PDFs no lado do cliente (browser). O texto é dividido em linhas que cabem na largura útil da página (A4 menos margens). Quando a linha seguinte ultrapassa a margem inferior, uma **nova página** é criada automaticamente. O espaçamento entre linhas (leading) é fixo em 7 unidades para legibilidade.",
     passos: [
       {
-        titulo: "Criar documento",
-        descricao: "new jsPDF() — página A4 retrato por padrão.",
+        src: imgSubstituicao,
+        alt: "Texto com as posições encontradas e o resultado de substituir uma ou todas",
       },
       {
-        titulo: "Calcular largura útil",
-        descricao: "pageWidth - 2 × margem (ex.: 210mm - 30mm = 180mm).",
+        src: imgSubstituirUma,
+        alt: "Editor depois de substituir apenas a segunda ocorrência",
       },
       {
-        titulo: "Quebrar texto em linhas",
-        descricao: "splitTextToSize(texto, larguraUtil) — respeita palavras, não corta no meio.",
+        src: imgSubstituirTodas,
+        alt: "Editor depois de substituir todas as ocorrências",
       },
+    ],
+  },
+  {
+    id: "jspdf",
+    titulo: "jsPDF",
+    capitulo: "Biblioteca",
+    codigos: [
       {
-        titulo: "Desenhar linha a linha",
-        descricao: "doc.text(linha, margem, y); y += 7; se y > altura - margem → addPage().",
+        arquivo: "src/utils/exportarPdf.ts",
+        trecho: extrairArquivo(exportarPdfFonte),
       },
+    ],
+    imagens: [
       {
         titulo: "Salvar",
         descricao: "doc.save('documento.pdf') — dispara download no navegador.",
@@ -221,8 +238,6 @@ function irPara(id: string) {
 }
 
 export default function Apresentacao() {
-  const [mostrarCodigos, setMostrarCodigos] = useState(false);
-
   useEffect(() => {
     const tituloAnterior = document.title;
     document.title = "Apresentação · Editor de Texto";
@@ -265,16 +280,6 @@ export default function Apresentacao() {
         </figure>
       </header>
 
-      <div className="toggle-codigos">
-        <button
-          onClick={() => setMostrarCodigos(!mostrarCodigos)}
-          className={mostrarCodigos ? "ativo" : ""}
-        >
-          {mostrarCodigos ? "Ocultar código" : "Mostrar código"} fonte
-        </button>
-        <span className="dica">Os conceitos vêm primeiro; o código ilustra.</span>
-      </div>
-
       {conceitos.map((c, i) => (
         <section className="conceito" id={c.id} key={c.id} aria-labelledby={`${c.id}-titulo`}>
           <header className="conceito-topo">
@@ -307,20 +312,8 @@ export default function Apresentacao() {
                 <img src={c.imagem.src} alt={c.imagem.alt} />
                 <figcaption>{c.imagem.legenda}</figcaption>
               </figure>
-            </div>
-          )}
-
-          {/* Código fonte (opcional, colapsável) */}
-          {mostrarCodigos && c.codigo && (
-            <div className="codigos">
-              <BlocoCodigo
-                arquivo={c.codigo.arquivo}
-                trecho={c.codigo.trecho}
-                mostrarComentarios={false}
-              />
-              <p className="codigo-foco">🔍 Foco: {c.codigo.foco}</p>
-            </div>
-          )}
+            ))}
+          </div>
         </section>
       ))}
     </div>
