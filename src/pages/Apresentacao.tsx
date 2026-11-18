@@ -1,6 +1,7 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import { extrairBloco, type Trecho } from "../utils/codigo";
 import BlocoCodigo from "./BlocoCodigo";
+import SimuladorPilhas from "./SimuladorPilhas";
 import "./Apresentacao.css";
 
 // Código-fonte lido dos arquivos do projeto (?raw)
@@ -13,7 +14,6 @@ import historicoFonte from "../hooks/useHistorico.ts?raw";
 import imgPilha from "../assets/apresentacao/pilha.svg";
 import imgBoyerMoore from "../assets/apresentacao/boyer-moore.svg";
 import imgSubstituicao from "../assets/apresentacao/substituicao.svg";
-import imgHistorico from "../assets/apresentacao/historico.svg";
 import imgPdf from "../assets/apresentacao/pdf.svg";
 import imgEnunciado from "../assets/apresentacao/enunciado.png";
 
@@ -33,6 +33,8 @@ interface ConceitoVisual {
   passos: { titulo: string; descricao: string }[];
   codigo: { arquivo: string; trecho: Trecho; foco: string } | null;
   imagem: { src: string; alt: string; legenda: string } | null;
+  /** Componente interativo exibido no lugar da imagem estática */
+  interativo?: ReactNode;
 }
 
 const conceitos: ConceitoVisual[] = [
@@ -96,11 +98,8 @@ const conceitos: ConceitoVisual[] = [
       trecho: extrairBloco(historicoFonte, "export function useHistorico"),
       foco: "Funções alterar, desfazerAcao e refazerAcao — sincronismo das duas pilhas",
     },
-    imagem: {
-      src: imgHistorico,
-      alt: "Tabela de histórico mostrando ações (alterar, desfazerAcao, refazerAcao) com colunas para texto atual, pilha desfazer e pilha refazer, ilustrando a migração de itens entre as duas pilhas",
-      legenda: "Exemplo passo a passo: digitar 'a' → 'ab' → 'abc'; desfazer duas vezes → 'a'; refazer → 'ab'; nova edição 'abx' limpa refazer",
-    },
+    imagem: null,
+    interativo: <SimuladorPilhas />,
   },
   {
     id: "boyer-moore",
@@ -309,6 +308,9 @@ export default function Apresentacao() {
               </figure>
             </div>
           )}
+
+          {/* Visual interativo (substitui a imagem estática) */}
+          {c.interativo && <div className="imagem-wrapper">{c.interativo}</div>}
 
           {/* Código fonte (opcional, colapsável) */}
           {mostrarCodigos && c.codigo && (
