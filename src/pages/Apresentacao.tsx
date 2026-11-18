@@ -20,20 +20,19 @@ import imgEnunciado from "../assets/apresentacao/enunciado.png";
 const REPOSITORIO = "https://github.com/gm-paiva/prj-ed-4-editor-texto";
 const TECNOLOGIAS = ["TypeScript", "React", "Vite", "jsPDF"];
 
+/** Converte **negrito** markdown para <strong> HTML */
+function markdownNegrito(texto: string): string {
+  return texto.replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>");
+}
+
 interface ConceitoVisual {
   id: string;
   titulo: string;
   capitulo: string;
-  // Explicação conceitual (texto principal da seção)
   explicacao: string;
-  // Passos visuais do algoritmo/fluxo
   passos: { titulo: string; descricao: string }[];
-  // Trecho de código representativo (apenas o essencial)
   codigo: { arquivo: string; trecho: Trecho; foco: string } | null;
-  // Imagem/diagrama ilustrativo
   imagem: { src: string; alt: string; legenda: string } | null;
-  // "Você sabia?" ou insight didático
-  insight?: string;
 }
 
 const conceitos: ConceitoVisual[] = [
@@ -45,16 +44,16 @@ const conceitos: ConceitoVisual[] = [
       "A pilha é uma estrutura de dados linear que segue o princípio **FILO** (First In, Last Out): o primeiro elemento a entrar é o último a sair. Pense numa pilha de pratos — você só consegue retirar o que está no topo. No editor, usamos **duas pilhas** para implementar desfazer/refazer: uma guarda o passado (ações para desfazer) e outra guarda o futuro (ações desfeitas, prontas para refazer).",
     passos: [
       {
-        titulo: "Empilhar (push)",
+        titulo: "Empilhar",
         descricao: "Adiciona um elemento no topo. O elemento anterior desce um nível.",
       },
       {
-        titulo: "Desempilhar (pop)",
+        titulo: "Desempilhar",
         descricao: "Remove e devolve o elemento do topo. O elemento abaixo vira o novo topo.",
       },
       {
-        titulo: "Topo (peek)",
-        descricao: "Consulta o elemento do topo sem removê-lo — útil para ver o que será desfeito.",
+        titulo: "Topo",
+        descricao: "Consulta o elemento do topo sem removê-lo.",
       },
     ],
     codigo: {
@@ -67,8 +66,6 @@ const conceitos: ConceitoVisual[] = [
       alt: "Diagrama de pilha: itens A, B, C empilhados; seta mostrando remoção do C (topo)",
       legenda: "Operações básicas: empilhar A → empilhar B → empilhar C → desempilhar (retorna C)",
     },
-    insight:
-      "A imutabilidade da pilha (cada operação retorna nova instância) combina perfeitamente com o useState do React — o estado novo substitui o antigo sem mutação.",
   },
   {
     id: "desfazer-refazer",
@@ -104,8 +101,6 @@ const conceitos: ConceitoVisual[] = [
       alt: "Tabela de histórico mostrando ações (alterar, desfazerAcao, refazerAcao) com colunas para texto atual, pilha desfazer e pilha refazer, ilustrando a migração de itens entre as duas pilhas",
       legenda: "Exemplo passo a passo: digitar 'a' → 'ab' → 'abc'; desfazer duas vezes → 'a'; refazer → 'ab'; nova edição 'abx' limpa refazer",
     },
-    insight:
-      "O atalho Ctrl+Z nativo do navegador é interceptado (e.preventDefault()) para não conflitar com nossas duas pilhas controladas.",
   },
   {
     id: "boyer-moore",
@@ -141,8 +136,6 @@ const conceitos: ConceitoVisual[] = [
       alt: "Passo a passo visual: procurando 'pato' em 'o sapo viu o pato' com setas de salto",
       legenda: "Exemplo: busca 'pato' — ao falhar no 'o', pula 4 posições usando a tabela",
     },
-    insight:
-      "Diferente do naïve (que volta 1 a 1), Boyer-Moore pode pular o padrão inteiro quando o caractere ruim não existe no padrão — daí a eficiência O(n/m) no melhor caso.",
   },
   {
     id: "substituicao",
@@ -178,8 +171,6 @@ const conceitos: ConceitoVisual[] = [
       alt: "Exemplo visual: texto 'o gato e o gato' com posições [2, 11]; acima substitui uma ocorrência (laranja), abaixo substitui todas (azul)",
       legenda: "substituirOcorrencia (corte cirúrgico) vs substituirTodas (reconstrução completa mantendo índices estáveis)",
     },
-    insight:
-      "substituirTodas reconstrói a string de uma vez (O(n)) em vez de encadear replaces — evita realocações intermediárias e mantém índices estáveis.",
   },
   {
     id: "jspdf",
@@ -206,7 +197,7 @@ const conceitos: ConceitoVisual[] = [
       },
       {
         titulo: "Salvar",
-        descricao: "doc.save('nome.pdf') — dispara download no navegador.",
+        descricao: "doc.save('documento.pdf') — dispara download no navegador.",
       },
     ],
     codigo: {
@@ -219,8 +210,6 @@ const conceitos: ConceitoVisual[] = [
       alt: "Duas páginas A4 lado a lado mostrando margens, largura útil, leading de 7 e quebra de página",
       legenda: "Layout: margem 15, largura útil ~180mm, leading 7, quebra automática no rodapé",
     },
-    insight:
-      "splitTextToSize já cuida da quebra de palavras longas — não precisamos implementar hyphenation manual.",
   },
 ];
 
@@ -291,12 +280,11 @@ export default function Apresentacao() {
           <header className="conceito-topo">
             <span className="conceito-num">{String(i + 1).padStart(2, "0")}</span>
             <h2 id={`${c.id}-titulo`}>{c.titulo}</h2>
-            <span className="conceito-cap">{c.capitulo}</span>
           </header>
 
           {/* Explicação conceitual principal */}
           <div className="explicacao">
-            <p dangerouslySetInnerHTML={{ __html: c.explicacao }} />
+            <p dangerouslySetInnerHTML={{ __html: markdownNegrito(c.explicacao) }} />
           </div>
 
           {/* Passos visuais do algoritmo/fluxo */}
@@ -311,14 +299,6 @@ export default function Apresentacao() {
               </div>
             ))}
           </div>
-
-          {/* Insight didático */}
-          {c.insight && (
-            <div className="insight">
-              <span className="insight-icon">💡</span>
-              <p>{c.insight}</p>
-            </div>
-          )}
 
           {/* Imagem/diagrama ilustrativo */}
           {c.imagem && (

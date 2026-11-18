@@ -9,6 +9,7 @@
   --insight-border: #2d4a6b;
   --passo-bg: #15181c;
   --passo-border: #2a2f36;
+  --explicacao-texto: #fbfdff;
 
   /* Cores do código */
   --c-palavra: #8ab4f8;
@@ -210,7 +211,7 @@
 }
 
 .explicacao strong {
-  color: var(--destaque-claro);
+  color: var(--explicacao-texto);
 }
 
 /* ---------- Passos visuais (algoritmo/fluxo) ---------- */
@@ -250,6 +251,11 @@
   font-size: 1rem;
 }
 
+.codigos-ativos .passo-num {
+  background: var(--destaque-claro);
+  color: #fff;
+}
+
 .passo-conteudo {
   flex: 1;
   min-width: 0;
@@ -266,6 +272,11 @@
   color: var(--texto);
   line-height: 1.5;
 }
+
+.codigos-ativos .passo-conteudo p {
+  color: #fff;
+}
+
 
 /* ---------- Insight didático ---------- */
 

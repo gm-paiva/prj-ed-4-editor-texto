@@ -1,9 +1,9 @@
 :root {
   --fundo: #0c0d0d;
-  --superficie: #1a1c1e;
+  --superficie: #1e1d1a;
   --texto: #e0e0e0;
   --borda: #3a3c40;
-  --destaque: #1a3c7d;
+  --destaque: #224daa;
 }
 
 * { box-sizing: border-box; }
